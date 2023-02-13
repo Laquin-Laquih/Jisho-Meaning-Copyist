@@ -1,0 +1,44 @@
+{
+    "name": "Jisho Meanings Copyist",
+    "version": "1.0",
+    "description": "Copy the meanings of a word from Jisho.org in a single click",
+    "permissions": ["tabs"],
+    "host_permissions": ["https://jisho.org/search/*"],
+    "background":
+    {
+        "service_worker": "background.js"
+    },
+    "content_scripts":
+    [
+        {
+            "matches": ["https://jisho.org/search/*"],
+            "js": ["contentScript.js"],
+            "all_frames": true
+        }
+    ],
+    "web_accessible_resources": 
+    [
+        {
+            "resources":
+            [
+                "assets/copy.png"
+            ],
+            "matches": ["https://jisho.org/*"]
+        }
+    ],
+    "action":
+    {
+        "default_icon":
+        {
+            "16": "assets/ext-icon.png",
+            "24": "assets/ext-icon.png",
+            "32": "assets/ext-icon.png"
+        },
+        "default_title": "Jisho Meanings Copyist",
+        "default_popup": "popup.html"
+    },
+    "externally_connectable": {
+        "matches": ["https://jisho.org/search/*"]
+    },
+    "manifest_version": 3
+}
