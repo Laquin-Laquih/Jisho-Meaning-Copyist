@@ -50,6 +50,47 @@ function copyButtonHandler()
     fallbackCopyTextToClipboard(completeMeaning);
 }
 
+function readingButtonHandler()
+{
+    var parentElement = this.parentElement;
+    var furigana = parentElement.getElementsByClassName('furigana')[0];
+    var text = parentElement.getElementsByClassName('text')[0].innerHTML.trim();
+    var furiganaTexts = [];
+
+    for (const child of furigana.children)
+    {
+        if (child.innerText != "")
+        {
+            furiganaTexts.push(child.innerText);
+        }
+    }
+
+    var reading = "";
+    var j = 0;
+
+    for(var i = 0; i < text.length; ++i)
+    {
+        var c = text.charAt(i);
+        if (c == '<')
+        {
+            reading += text.charAt(i+6);
+            i += 13;
+        }
+        else
+        {
+            if(j >= furiganaTexts.length)
+            {
+                console.error("Error: furiganaTexts.length < text.length");
+                return;
+            }
+            reading += furiganaTexts[j];
+            ++j;
+        }
+    }
+
+    fallbackCopyTextToClipboard(reading);
+}
+
 //create copy button
 var copyButton = document.createElement('button');
 copyButton.style = 'background-color:#E3EFE8; border-radius:2px; padding:8px; font-family:"Courier New", monospace; font-size:18px; margin:20px;'
@@ -70,3 +111,22 @@ for (var i = 0; i < copyButtons.length; i++)
     copyButtons[i].addEventListener('click', copyButtonHandler);
 }
 
+//create reading button
+var readingButton = document.createElement('button');
+readingButton.style = 'background-color:#E3EFE8; border-radius:2px; padding:8px; font-family:"Courier New", monospace; font-size:18px; margin:20px;'
+readingButton.className = 'reading-button';
+readingButton.title = 'Copy to clipboard';
+readingButton.innerText = 'Reading';
+
+var representations = document.getElementsByClassName("concept_light-representation");
+for (var i = 0; i < representations.length; i++)
+{
+    representations[i].appendChild(readingButton.cloneNode(true));
+}
+
+//add event listener to reading button
+var readingButtons = document.getElementsByClassName('reading-button');
+for (var i = 0; i < readingButtons.length; i++)
+{
+    readingButtons[i].addEventListener('click', readingButtonHandler);
+}
